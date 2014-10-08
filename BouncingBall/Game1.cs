@@ -50,9 +50,8 @@ namespace BouncingBall
             spriteBatch = new SpriteBatch(GraphicsDevice);
             SimulationManager.Instance.LoadContent(Content);
             
-            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(50, 50), new Vector2(50, 50), "1", SimulationManager.Instance.GetCurrentSimulation()));
-            SimulationManager.Instance.GetCurrentSimulation().LoadContent(Content);
-
+            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(300, 50), new Vector2(50, 50), new Vector2(1f, 1f), 0f, "1", SimulationManager.Instance.GetCurrentSimulation()));
+            SimulationManager.Instance.LoadContent(Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -91,9 +90,13 @@ namespace BouncingBall
         {
             GraphicsDevice.Clear(Color.Black);
 
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null);
+
             // TODO: Add your drawing code here
 
             SimulationManager.Instance.Draw(spriteBatch, gameTime);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

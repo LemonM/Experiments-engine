@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BouncingBall
 {
-    interface IDynamicObject : IDrawableObject, IUpdateable, IDrawable
+    interface IDynamicObject : IDrawableObject, IUpdateable
     {
         event EventHandler OnDrag;
         event EventHandler OnLMBDown;

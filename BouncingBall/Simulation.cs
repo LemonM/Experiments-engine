@@ -76,7 +76,7 @@ namespace BouncingBall
             {
                 foreach (IDynamicObject dynamicObject in DynamicObjects)
                 {
-                    dynamicObject.Draw(gameTime);
+                    dynamicObject.Draw(gameTime, spriteBatch);
                 }
 
                 foreach (IStaticObject staticObject in StaticObjects)

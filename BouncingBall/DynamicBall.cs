@@ -132,12 +132,13 @@ namespace BouncingBall
             get { throw new NotImplementedException(); }
         }
 
-        public DynamicBall(Vector2 pos, Vector2 size, Vector2 scale,  string texPath, Simulation parentSim)
+        public DynamicBall(Vector2 pos, Vector2 size, Vector2 scale, float rotation,  string texPath, Simulation parentSim)
         {
             Position = pos;
             Size = size;
             TexturePath = texPath;
             Scale = scale;
+            Rotation = rotation;
             parentSimaultion = parentSim;
             boundingsphere.Center = new Vector3(pos, 0);
             boundingsphere.Radius = size.X/2;
@@ -177,7 +178,7 @@ namespace BouncingBall
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Origin = 
+            Origin = new Vector2(0, 0);//(Texture.Width * Scale.X) / 2, (Texture.Height * Scale.Y) / 2); 
             spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, Origin, Scale, SpriteEffects.None, ZDepth);
         }
 
