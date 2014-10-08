@@ -2,90 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace BouncingBall
 {
     class SimulationManager
     {
+        private static SimulationManager _instance;
+
+        public static SimulationManager Instance
+        {
+            get
+            {
+                _instance = _instance ?? new SimulationManager();
+                return _instance;
+            }
+        }
+
         private Simulation currentSimulation;
 
         private SerializationManager<Simulation> serializer;
 
-        protected static SimulationManager _instance;
-
-        private Vector2 _screenSize;
-
-        public ContentManager Content { get; private set; }
-
-        public Vector2 ScreenSize
+        public Simulation LoadSimulation(string simulationName)
         {
-            get { return _screenSize; }
-            set { _screenSize = new Vector2(value.X < 1 ? 1 : value.X, value.Y < 1 ? 1 : value.Y);}
-        }
-
-        public static SimulationManager Instance 
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new SimulationManager();
-                return _instance;
-            } 
-        }
-
-        private SimulationManager()
-        {
-
-        }
-
-        public void Initialize()
-        {
-            serializer = new SerializationManager<Simulation>();
-            currentSimulation.Initialize();
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-            Content = new ContentManager(content.ServiceProvider, content.RootDirectory);
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            currentSimulation.Update(gameTime);
-        }
-
-        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
-        {
-            currentSimulation.Draw(spriteBatch, gameTime);
-        }
-
-        private Simulation LoadSimulation(string simulationName)
-        {
-            return serializer.Deserialize(Content.RootDirectory + @"\Simulations\" + simulationName);       
+            return serializer.Deserialize(ScreenManager.Instance.Content.RootDirectory + @"\Simulations\" + simulationName);
         }
 
         public bool SaveSimulation(string simulationName)
         {
-            return serializer.Serialize(currentSimulation, Content.RootDirectory + @"\Simulations\" + simulationName);
+            return serializer.Serialize(currentSimulation, ScreenManager.Instance.Content.RootDirectory + @"\Simulations\" + simulationName);
         }
 
         public void SetCurrentSimulation(Simulation simulation)
         {
             if (currentSimulation != null)
+            {
                 currentSimulation.Stop();
+                currentSimulation.UnloadContent();
+            }
             currentSimulation = simulation;
-            currentSimulation.Start(Content);
+            currentSimulation.Initialize();
+            currentSimulation.LoadContent();
+            currentSimulation.Start();
         }
 
         public void SetCurrentSimulation(string simulationName)
         {
             if (currentSimulation != null)
-            currentSimulation.Stop();
+            {
+                currentSimulation.Stop();
+                currentSimulation.UnloadContent();
+            }
             currentSimulation = LoadSimulation(simulationName);
-            currentSimulation.Start(Content);
+            currentSimulation.LoadContent(Content);
+            currentSimulation.Start();
         }
 
         public Simulation GetCurrentSimulation()

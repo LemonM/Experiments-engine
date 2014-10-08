@@ -10,15 +10,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BouncingBall
 {
-    class Simulation
+    public class Simulation
     {
+        private string _name;
+
         private List<IDynamicObject> _dynamicObjects;
         private List<IStaticObject> _staticObjects;
 
         public readonly float g;
 
         [XmlIgnore]
-        private ContentManager Content;
+        public ContentManager Content { get; private set; }
 
         [XmlIgnore]
         public bool Enabled { get; private set; }
@@ -26,6 +28,11 @@ namespace BouncingBall
 
         public List<IDynamicObject> DynamicObjects { get { return _dynamicObjects; } set { _dynamicObjects = value; } }
         public List<IStaticObject> StaticObjects { get { return _staticObjects; } set { _staticObjects = value; } }
+
+        public string Name
+        {
+            get { return _name; }
+        }
 
         public Simulation(float g)
         {
@@ -92,7 +99,7 @@ namespace BouncingBall
             UnloadContent();
         }
 
-        public void Start(ContentManager content)
+        public void Start()
         {
             Enabled = true;
         }

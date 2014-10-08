@@ -116,7 +116,7 @@ namespace BouncingBall
             {
                 _texturePath = File.Exists(value)
                     ? value
-                    : SimulationManager.Instance.Content.RootDirectory + @"\Textures\DefaultBall" ;
+                    : ScreenManager.Instance.Content.RootDirectory + @"\Textures\DefaultBall" ;
             }
         }
 
@@ -158,7 +158,7 @@ namespace BouncingBall
         {
             _nextPosition.Y = _position.Y + (parentSimaultion.g * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
 
-            if (!((_nextPosition.Y + Size.Y) > SimulationManager.Instance.ScreenSize.Y))
+            if (!((_nextPosition.Y + Size.Y) > ScreenManager.Instance.ScreenSize.Y))
             {
                 _position = _nextPosition;
             }

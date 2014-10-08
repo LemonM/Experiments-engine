@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BouncingBall
 {
-    interface IObject
+    public interface IObject
     {
         event EventHandler OnClick;
 

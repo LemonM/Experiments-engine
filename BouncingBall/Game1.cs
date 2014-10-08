@@ -23,6 +23,7 @@ namespace BouncingBall
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            ScreenManager.Instance.GDM = graphics;
             Content.RootDirectory = "Content";
         }
 
@@ -35,8 +36,9 @@ namespace BouncingBall
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            ScreenManager.Instance.Initialize(Content);
+            ScreenManager.Instance.SetScreenSize(640, 480);
             SimulationManager.Instance.SetCurrentSimulation(new Simulation(9.8f));
-            SimulationManager.Instance.Initialize();
             base.Initialize();
         }
 
@@ -48,10 +50,8 @@ namespace BouncingBall
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            SimulationManager.Instance.LoadContent(Content);
-            
-            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(300, 50), new Vector2(50, 50), new Vector2(1f, 1f), 0f, "1", SimulationManager.Instance.GetCurrentSimulation()));
-            SimulationManager.Instance.LoadContent(Content);
+
+     
             // TODO: use this.Content to load your game content here
         }
 
@@ -62,7 +62,7 @@ namespace BouncingBall
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            SimulationManager.Instance.GetCurrentSimulation().UnloadContent();
+            ScreenManager.Instance.CurrentScreen.UnloadContent();
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace BouncingBall
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            SimulationManager.Instance.Update(gameTime);
+            ScreenManager.Instance.CurrentScreen.Update(gameTime);
 
             // TODO: Add your update logic here
 
@@ -94,7 +94,7 @@ namespace BouncingBall
 
             // TODO: Add your drawing code here
 
-            SimulationManager.Instance.Draw(spriteBatch, gameTime);
+            ScreenManager.Instance.CurrentScreen.Draw(spriteBatch, gameTime);
 
             spriteBatch.End();
 

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace BouncingBall
 {
-    interface IStaticObject : IObject, IDrawable
+    public interface IStaticObject : IObject, IDrawable
     {
         bool IsVisible { get; set; }
     }

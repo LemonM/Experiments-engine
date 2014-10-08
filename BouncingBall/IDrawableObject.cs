@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BouncingBall
 {
-    interface IDrawableObject : IObject
+    public interface IDrawableObject : IObject
     {
         Vector2 Scale { get; set; }
 
