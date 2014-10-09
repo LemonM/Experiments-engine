@@ -38,6 +38,7 @@ namespace BouncingBall
             // TODO: Add your initialization logic here
             ScreenManager.Instance.Initialize(Content);
             ScreenManager.Instance.SetScreenSize(640, 480);
+            ScreenManager.Instance.CurrentScreen = new SimulationScreen();
             SimulationManager.Instance.SetCurrentSimulation(new Simulation(9.8f));
             base.Initialize();
         }

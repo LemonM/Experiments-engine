@@ -34,27 +34,38 @@ namespace BouncingBall
 
         public void SetCurrentSimulation(Simulation simulation)
         {
-            if (currentSimulation != null)
+            if (ScreenManager.Instance.CurrentScreen != null && ScreenManager.Instance.CurrentScreen is SimulationScreen && Instance.currentSimulation != null)
             {
-                currentSimulation.Stop();
-                currentSimulation.UnloadContent();
+                if (Instance.currentSimulation != null)
+                {
+                    Instance.currentSimulation.Stop();
+                    Instance.currentSimulation.UnloadContent();
+                }
+                Instance.currentSimulation = simulation;
+                Instance.currentSimulation.Initialize();
+                Instance.currentSimulation.LoadContent((ScreenManager.Instance.CurrentScreen as SimulationScreen).Content);
+                Instance.currentSimulation.Start();
             }
-            currentSimulation = simulation;
-            currentSimulation.Initialize();
-            currentSimulation.LoadContent();
-            currentSimulation.Start();
+            else
+                throw new Exception("Current screen must be Simulation screen to load the simulation");
         }
 
         public void SetCurrentSimulation(string simulationName)
         {
-            if (currentSimulation != null)
+            if (ScreenManager.Instance.CurrentScreen != null && ScreenManager.Instance.CurrentScreen is SimulationScreen)
             {
-                currentSimulation.Stop();
-                currentSimulation.UnloadContent();
+                if (Instance.currentSimulation != null)
+                {
+                    Instance.currentSimulation.Stop();
+                    Instance.currentSimulation.UnloadContent();
+                }
+                currentSimulation = LoadSimulation(simulationName);
+                Instance.currentSimulation.Initialize();
+                Instance.currentSimulation.LoadContent((ScreenManager.Instance.CurrentScreen as SimulationScreen).Content);
+                Instance.currentSimulation.Start();
             }
-            currentSimulation = LoadSimulation(simulationName);
-            currentSimulation.LoadContent(Content);
-            currentSimulation.Start();
+            else
+                throw new Exception("Current screen must be Simulation screen to load the simulation");
         }
 
         public Simulation GetCurrentSimulation()

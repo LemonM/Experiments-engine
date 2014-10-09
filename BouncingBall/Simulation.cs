@@ -96,7 +96,6 @@ namespace BouncingBall
         public void Stop()
         {
             Enabled = false;
-            UnloadContent();
         }
 
         public void Start()
