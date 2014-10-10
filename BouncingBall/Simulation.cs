@@ -17,6 +17,8 @@ namespace BouncingBall
         private List<IDynamicObject> _dynamicObjects;
         private List<IStaticObject> _staticObjects;
 
+        private IObject _selectedObject;
+
         public readonly float g;
 
         [XmlIgnore]
@@ -31,6 +33,12 @@ namespace BouncingBall
         public string Name
         {
             get { return _name; }
+        }
+
+        public IObject SelectedObject
+        {
+            get { return _selectedObject; }
+            set { _selectedObject = value; }
         }
 
         public Simulation(string name, float g)

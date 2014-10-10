@@ -46,7 +46,10 @@ namespace BouncingBall
         private bool _visible;
         private bool _enabled;
 
-        private string _texturePath;      
+        private string _texturePath;
+
+        MouseState _prevMouseState { get; set; }
+        MouseState _currentMouseState { get; set; }
 
         public Vector2 Position
         {
@@ -207,10 +210,22 @@ namespace BouncingBall
         public void Update(GameTime gameTime)
         {
 
-            if ((new BoundingBox(new Vector3(Mouse.GetState().X, Mouse.GetState().Y, 0), new Vector3(Mouse.GetState().X , Mouse.GetState().Y , 0))).Intersects(boundingsphere) && Mouse.GetState().LeftButton == ButtonState.Pressed)
+            _currentMouseState = Mouse.GetState();
+
+            if ((new BoundingBox(new Vector3(_currentMouseState.X, _currentMouseState.Y, 0), new Vector3(_currentMouseState.X, _currentMouseState.Y, 0))).Intersects(boundingsphere) && _currentMouseState.LeftButton == ButtonState.Pressed)
             {
+                if (OnLMBDown != null)
+                    OnLMBDown(this, null);
+
                 if (OnDrag != null)
                     OnDrag(this, null);
+                    
+            }
+
+            if (_currentMouseState.LeftButton == ButtonState.Released && _prevMouseState.LeftButton == ButtonState.Pressed)
+            {
+                if (OnClick != null)
+                        OnClick(this, null);
             }
 
             else
@@ -223,18 +238,8 @@ namespace BouncingBall
 
                     _nextPosition = _position + _speed;
 
-                    Rotation += MathHelper.PiOver4 * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
                     boundingsphere.Center = new Vector3(Position + Origin, 0);
                     boundingsphere.Radius = (Texture.Width / 2) * Scale.X;
-
-                    foreach (DynamicBall obj in parentSimaultion.DynamicObjects)
-                    {
-                        if (boundingsphere.Intersects(obj.boundingsphere))
-                        {
-                            _direction.Y = 0;
-                        }
-                    }
 
                     if (!((_nextPosition.Y + Size.Y) > ScreenManager.Instance.ScreenSize.Y))
                     {
@@ -245,8 +250,21 @@ namespace BouncingBall
                     {
                         _direction.Y = 0;
                     }
+
+                    foreach (DynamicBall obj in parentSimaultion.DynamicObjects)
+                    {
+                        if (obj != this)
+                        {
+                            if (boundingsphere.Intersects(obj.boundingsphere))
+                            {
+                                _direction.Y = 0;
+                            }
+                        }
+                    }
                 }
             }
+
+            _prevMouseState = _currentMouseState;
         }
 
         public void Draw(GameTime gameTime)
