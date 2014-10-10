@@ -24,26 +24,26 @@ namespace BouncingBall
 
         [XmlIgnore]
         public bool Enabled { get; private set; }
-        public int UpdateOrder { get; private set; }
 
-        public List<IDynamicObject> DynamicObjects { get { return _dynamicObjects; } set { _dynamicObjects = value; } }
-        public List<IStaticObject> StaticObjects { get { return _staticObjects; } set { _staticObjects = value; } }
+        public List<IDynamicObject> DynamicObjects { get { return _dynamicObjects; } private set { _dynamicObjects = value; } }
+        public List<IStaticObject> StaticObjects { get { return _staticObjects; } private set { _staticObjects = value; } }
 
         public string Name
         {
             get { return _name; }
         }
 
-        public Simulation(float g)
+        public Simulation(string name, float g)
         {
             this.g = g;
+            _name = name;
+            Enabled = false;
         }
 
         public void Initialize()
         {
             _dynamicObjects = new List<IDynamicObject>();
-            _staticObjects = new List<IStaticObject>();
-            Enabled = true;
+            _staticObjects = new List<IStaticObject>();            
         }
 
         public void LoadContent(ContentManager content)
@@ -79,7 +79,7 @@ namespace BouncingBall
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            if (Enabled)
+            //if (Enabled)
             {
                 foreach (IDynamicObject dynamicObject in DynamicObjects)
                 {

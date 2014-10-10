@@ -34,7 +34,7 @@ namespace BouncingBall
 
         public void SetCurrentSimulation(Simulation simulation)
         {
-            if (ScreenManager.Instance.CurrentScreen != null && ScreenManager.Instance.CurrentScreen is SimulationScreen && Instance.currentSimulation != null)
+            if (ScreenManager.Instance.CurrentScreen != null && ScreenManager.Instance.CurrentScreen is SimulationScreen)
             {
                 if (Instance.currentSimulation != null)
                 {
