@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using  System.Xml.Serialization;
+using Microsoft.Xna.Framework.Input;
 
 namespace BouncingBall
 {
@@ -157,7 +158,7 @@ namespace BouncingBall
 
         public bool Enabled
         {
-            get { return _enabled; }
+            get { return parentSimaultion.Enabled; }
         }
 
         public bool Visible
@@ -188,7 +189,8 @@ namespace BouncingBall
             Rotation = rotation;
             parentSimaultion = parentSim;
             boundingsphere.Center = new Vector3(pos, 0);
-            boundingsphere.Radius = size.X/2;
+            boundingsphere.Radius = size.X / 2;
+            OnDrag += OnDragEventHandler;
             _visible = true;
         }
 
@@ -204,20 +206,46 @@ namespace BouncingBall
 
         public void Update(GameTime gameTime)
         {
-            _velocity.Y = (parentSimaultion.g * Mass) / 5;
-            _speed.X = (Math.Min(_speed.X + Velocity.X, MaxSpeed.X)) * Direction.X;
-            _speed.Y = (Math.Min(_speed.Y + (Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds), MaxSpeed.Y)) * Direction.Y;
 
-            _nextPosition = _position + _speed;
-
-            if (!((_nextPosition.Y + Size.Y) > ScreenManager.Instance.ScreenSize.Y))
+            if ((new BoundingBox(new Vector3(Mouse.GetState().X, Mouse.GetState().Y, 0), new Vector3(Mouse.GetState().X , Mouse.GetState().Y , 0))).Intersects(boundingsphere) && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
-                _position.Y = MathHelper.Lerp(_position.Y, _nextPosition.Y, _speed.Y);
-                _direction.Y = 1;
+                if (OnDrag != null)
+                    OnDrag(this, null);
             }
+
             else
             {
-                _direction.Y = 0;
+                if (Enabled)
+                {
+                    _velocity.Y = (parentSimaultion.g * Mass) / 5;
+                    _speed.X = (Math.Min(_speed.X + Velocity.X, MaxSpeed.X)) * Direction.X;
+                    _speed.Y = (Math.Min(_speed.Y + (Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds), MaxSpeed.Y)) * Direction.Y;
+
+                    _nextPosition = _position + _speed;
+
+                    Rotation += MathHelper.PiOver4 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    boundingsphere.Center = new Vector3(Position + Origin, 0);
+                    boundingsphere.Radius = (Texture.Width / 2) * Scale.X;
+
+                    foreach (DynamicBall obj in parentSimaultion.DynamicObjects)
+                    {
+                        if (boundingsphere.Intersects(obj.boundingsphere))
+                        {
+                            _direction.Y = 0;
+                        }
+                    }
+
+                    if (!((_nextPosition.Y + Size.Y) > ScreenManager.Instance.ScreenSize.Y))
+                    {
+                        _position.Y = MathHelper.Lerp(_position.Y, _nextPosition.Y, _speed.Y);
+                        _direction.Y = 1;
+                    }
+                    else
+                    {
+                        _direction.Y = 0;
+                    }
+                }
             }
         }
 
@@ -228,11 +256,22 @@ namespace BouncingBall
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (Visible)
+            //if (Visible)
             {
-                Origin = new Vector2(0, 0);//(Texture.Width * Scale.X) / 2, (Texture.Height * Scale.Y) / 2); 
-                spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, Origin, Scale, SpriteEffects.None, ZDepth);
+                Origin = new Vector2((Texture.Width * Scale.X) / 2, (Texture.Height * Scale.Y) / 2); 
+                spriteBatch.Draw(Texture, Position + Origin, null, Color.White, Rotation, Origin, Scale, SpriteEffects.None, ZDepth);
             }
+        }
+
+        public void OnDragEventHandler(object sender, EventArgs args)
+        {
+            this._direction = Vector2.Zero;
+            _speed = Vector2.Zero;
+            _position.X = Mouse.GetState().X - Origin.X;
+            
+            _position.Y = Mouse.GetState().Y - Origin.Y;
+            boundingsphere.Center = new Vector3(Position + Origin, 0);
+            boundingsphere.Radius = (Texture.Width / 2) * Scale.X;
         }
 
     }

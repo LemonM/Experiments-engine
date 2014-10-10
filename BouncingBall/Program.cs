@@ -19,7 +19,10 @@ namespace BouncingBall
         static void Main()
         {
             using (var game = new Game1())
+            {
+                game.IsMouseVisible = true;
                 game.Run();
+            }
         }
     }
 #endif

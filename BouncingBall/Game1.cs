@@ -53,8 +53,10 @@ namespace BouncingBall
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(250, 100), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 3f), 1f, 0f, "1", SimulationManager.Instance.GetCurrentSimulation()));
             SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(250, 250), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 3f), 1f, 0f, "1", SimulationManager.Instance.GetCurrentSimulation()));
             SimulationManager.Instance.GetCurrentSimulation().LoadContent(ScreenManager.Instance.CurrentScreen.Content);
+            
 
             
      
@@ -81,7 +83,9 @@ namespace BouncingBall
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
-                SimulationManager.Instance.GetCurrentSimulation().DynamicObjects[0].Position = new Vector2(100, 0);
+                SimulationManager.Instance.GetCurrentSimulation().Stop();
+            if (Keyboard.GetState().IsKeyDown(Keys.LeftControl))
+                SimulationManager.Instance.GetCurrentSimulation().Start();
 
             ScreenManager.Instance.CurrentScreen.Update(gameTime);
 

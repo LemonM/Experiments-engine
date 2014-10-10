@@ -68,13 +68,10 @@ namespace BouncingBall
         }
         public void Update(GameTime gameTime)
         {
-            if (Enabled)
-            {
                 foreach (IDynamicObject dynamicObject in DynamicObjects)
                 {
                     dynamicObject.Update(gameTime);
                 }
-            }
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
