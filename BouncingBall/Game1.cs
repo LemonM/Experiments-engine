@@ -1,10 +1,12 @@
 ﻿#region Using Statements
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 #endregion
@@ -12,14 +14,15 @@ using Microsoft.Xna.Framework.GamerServices;
 namespace BouncingBall
 {
     /// <summary>
-    /// This is the main type for your game
+    /// This is the main type for game
     /// </summary>
-    public class Game1 : Game
+    public class MainGameClass : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        public static Forms.ObjectExplorer objExplorer = new Forms.ObjectExplorer();
 
-        public Game1()
+        public MainGameClass()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -35,7 +38,6 @@ namespace BouncingBall
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             ScreenManager.Instance.Initialize(Content);
             ScreenManager.Instance.SetScreenSize(640, 480);
             ScreenManager.Instance.SetCurrentScreen(new SimulationScreen());
@@ -53,14 +55,12 @@ namespace BouncingBall
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(250, 100), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 3f), 1f, 0f, "1", SimulationManager.Instance.GetCurrentSimulation()));
-            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(250, 250), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 3f), 1f, 0f, "1", SimulationManager.Instance.GetCurrentSimulation()));
+            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(250, 100), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 3f), 3f, 0f, "1"));
+            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(250, 250), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 12f), 10f, 0f, "1"));
             SimulationManager.Instance.GetCurrentSimulation().LoadContent(ScreenManager.Instance.CurrentScreen.Content);
-            
+            objExplorer.Show();
+            objExplorer.ResumeLayout();
 
-            
-     
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -69,7 +69,6 @@ namespace BouncingBall
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
             ScreenManager.Instance.CurrentScreen.UnloadContent();
         }
 
@@ -80,16 +79,7 @@ namespace BouncingBall
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-                SimulationManager.Instance.GetCurrentSimulation().Stop();
-            if (Keyboard.GetState().IsKeyDown(Keys.LeftControl))
-                SimulationManager.Instance.GetCurrentSimulation().Start();
-
-            ScreenManager.Instance.CurrentScreen.Update(gameTime);
-
-            // TODO: Add your update logic here
+            
 
             base.Update(gameTime);
         }
@@ -101,14 +91,6 @@ namespace BouncingBall
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.Additive, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullNone, null);
-
-            // TODO: Add your drawing code here
-
-            ScreenManager.Instance.CurrentScreen.Draw(spriteBatch, gameTime);
-
-            spriteBatch.End();
 
             base.Draw(gameTime);
         }

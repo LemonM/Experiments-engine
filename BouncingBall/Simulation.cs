@@ -115,6 +115,9 @@ namespace BouncingBall
 
         public void AddDynamicObject(IDynamicObject dynamicObject)
         {
+            dynamicObject.ParentSimulation = this;
+            if (dynamicObject.Name == string.Empty)
+                _name = dynamicObject.GetType().ToString() + DynamicObjects.Count.ToString() ?? "0";
             DynamicObjects.Add(dynamicObject);
         }
 

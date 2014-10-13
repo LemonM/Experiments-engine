@@ -12,6 +12,8 @@ namespace BouncingBall
         event EventHandler OnLMBDown;
         event EventHandler OnLMBRelease;
 
+        Simulation ParentSimulation { get; set; }
+
         Vector2 Velocity { get; set; }
         Vector2 Speed    { get; }
         Vector2 MaxSpeed { get; set; }

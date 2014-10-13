@@ -18,7 +18,7 @@ namespace BouncingBall
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new MainGameClass())
             {
                 game.IsMouseVisible = true;
                 game.Run();

@@ -22,7 +22,7 @@ namespace BouncingBall
         public event EventHandler<EventArgs> VisibleChanged;
         public event EventHandler<EventArgs> EnabledChanged;
 
-        private Simulation parentSimaultion;
+        private Simulation _parentSimulation;
 
         private BoundingSphere boundingsphere;
 
@@ -47,9 +47,12 @@ namespace BouncingBall
         private bool _enabled;
 
         private string _texturePath;
+        private string _name;
 
         MouseState _prevMouseState { get; set; }
         MouseState _currentMouseState { get; set; }
+
+        public Simulation ParentSimulation { get { return _parentSimulation; } set { _parentSimulation = value; } }
 
         public Vector2 Position
         {
@@ -159,9 +162,15 @@ namespace BouncingBall
             }
         }
 
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
         public bool Enabled
         {
-            get { return parentSimaultion.Enabled; }
+            get { return _parentSimulation.Enabled; }
         }
 
         public bool Visible
@@ -180,7 +189,7 @@ namespace BouncingBall
             }
         }
 
-        public DynamicBall(Vector2 pos, Vector2 size, Vector2 scale, Vector2 velocity, Vector2 maxSpeed, float mass, float rotation,  string texPath, Simulation parentSim)
+        public DynamicBall(Vector2 pos, Vector2 size, Vector2 scale, Vector2 velocity, Vector2 maxSpeed, float mass, float rotation, string texPath, string name = "")
         {
             Position = pos;
             Size = size;
@@ -190,11 +199,10 @@ namespace BouncingBall
             Scale = scale;
             Mass = mass;
             Rotation = rotation;
-            parentSimaultion = parentSim;
             boundingsphere.Center = new Vector3(pos, 0);
             boundingsphere.Radius = size.X / 2;
             OnDrag += OnDragEventHandler;
-            _visible = true;
+            _visible = true;            
         }
 
         public void Initialize()
@@ -232,7 +240,7 @@ namespace BouncingBall
             {
                 if (Enabled)
                 {
-                    _velocity.Y = (parentSimaultion.g * Mass) / 5;
+                    _velocity.Y = (_parentSimulation.g * Mass) / 5;
                     _speed.X = (Math.Min(_speed.X + Velocity.X, MaxSpeed.X)) * Direction.X;
                     _speed.Y = (Math.Min(_speed.Y + (Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds), MaxSpeed.Y)) * Direction.Y;
 
@@ -251,7 +259,7 @@ namespace BouncingBall
                         _direction.Y = 0;
                     }
 
-                    foreach (DynamicBall obj in parentSimaultion.DynamicObjects)
+                    foreach (DynamicBall obj in _parentSimulation.DynamicObjects)
                     {
                         if (obj != this)
                         {
@@ -263,6 +271,14 @@ namespace BouncingBall
                     }
                 }
             }
+
+            MainGameClass.objExplorer.Invoke((Action)(() =>
+            {
+                MainGameClass.objExplorer.NameTextBox.Text = _parentSimulation.SelectedObject != null ? _parentSimulation.SelectedObject.Name : string.Empty;
+                MainGameClass.objExplorer.XSpeedTextBox.Text = _parentSimulation.SelectedObject != null ? (_parentSimulation.SelectedObject as DynamicBall).Speed.X.ToString() : string.Empty;
+                MainGameClass.objExplorer.YSpeedTextBox.Text = _parentSimulation.SelectedObject != null ? (_parentSimulation.SelectedObject as DynamicBall).Speed.Y.ToString() : string.Empty;
+                MainGameClass.objExplorer.Update();
+            }));
 
             _prevMouseState = _currentMouseState;
         }
@@ -276,6 +292,10 @@ namespace BouncingBall
         {
             //if (Visible)
             {
+                RasterizerState state = new RasterizerState();
+                state.FillMode = FillMode.WireFrame;
+                spriteBatch.GraphicsDevice.RasterizerState = state;
+
                 Origin = new Vector2((Texture.Width * Scale.X) / 2, (Texture.Height * Scale.Y) / 2); 
                 spriteBatch.Draw(Texture, Position + Origin, null, Color.White, Rotation, Origin, Scale, SpriteEffects.None, ZDepth);
             }
@@ -283,6 +303,8 @@ namespace BouncingBall
 
         public void OnDragEventHandler(object sender, EventArgs args)
         {
+            _parentSimulation.SelectedObject = this; 
+
             this._direction = Vector2.Zero;
             _speed = Vector2.Zero;
             _position.X = Mouse.GetState().X - Origin.X;
@@ -291,6 +313,13 @@ namespace BouncingBall
             boundingsphere.Center = new Vector3(Position + Origin, 0);
             boundingsphere.Radius = (Texture.Width / 2) * Scale.X;
         }
+
+        public void OnLMBDownEventHandler(object sender, EventArgs args)
+        {
+            _parentSimulation.SelectedObject = this;           
+        }
+
+        
 
     }
 }
