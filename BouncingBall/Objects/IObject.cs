@@ -6,11 +6,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BouncingBall
+namespace Engine.Objects
 {
     public interface IObject
     {
-        event EventHandler OnClick;
+        event EventHandler OnDrag;
+        event EventHandler OnLMBDown;
+        event EventHandler OnLMBClick;
 
         Vector2 Position { get; set; }
         Vector2 Size { get; set; }

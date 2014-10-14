@@ -9,8 +9,10 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using  System.Xml.Serialization;
 using Microsoft.Xna.Framework.Input;
+using Engine.Simulations;
+using Engine.Screens;
 
-namespace BouncingBall
+namespace Engine.Objects
 {
     [Serializable]
     class DynamicBall : IDynamicObject
@@ -18,7 +20,7 @@ namespace BouncingBall
         public event EventHandler OnDrag;
         public event EventHandler OnLMBDown;
         public event EventHandler OnLMBRelease;
-        public event EventHandler OnClick;
+        public event EventHandler OnLMBClick;
         public event EventHandler<EventArgs> VisibleChanged;
         public event EventHandler<EventArgs> EnabledChanged;
 
@@ -220,6 +222,12 @@ namespace BouncingBall
 
             _currentMouseState = Mouse.GetState();
 
+            if (_currentMouseState.LeftButton == ButtonState.Released && _prevMouseState.LeftButton == ButtonState.Pressed)
+            {
+                if (OnLMBClick != null)
+                    OnLMBClick(this, null);
+            }
+
             if ((new BoundingBox(new Vector3(_currentMouseState.X, _currentMouseState.Y, 0), new Vector3(_currentMouseState.X, _currentMouseState.Y, 0))).Intersects(boundingsphere) && _currentMouseState.LeftButton == ButtonState.Pressed)
             {
                 if (OnLMBDown != null)
@@ -230,34 +238,16 @@ namespace BouncingBall
                     
             }
 
-            if (_currentMouseState.LeftButton == ButtonState.Released && _prevMouseState.LeftButton == ButtonState.Pressed)
-            {
-                if (OnClick != null)
-                        OnClick(this, null);
-            }
-
             else
             {
                 if (Enabled)
                 {
-                    _velocity.Y = (_parentSimulation.g * Mass) / 5;
-                    _speed.X = (Math.Min(_speed.X + Velocity.X, MaxSpeed.X)) * Direction.X;
-                    _speed.Y = (Math.Min(_speed.Y + (Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds), MaxSpeed.Y)) * Direction.Y;
+                    _direction.Y = 1;
 
                     _nextPosition = _position + _speed;
 
-                    boundingsphere.Center = new Vector3(Position + Origin, 0);
+                    boundingsphere.Center = new Vector3(_nextPosition + Origin, 0);
                     boundingsphere.Radius = (Texture.Width / 2) * Scale.X;
-
-                    if (!((_nextPosition.Y + Size.Y) > ScreenManager.Instance.ScreenSize.Y))
-                    {
-                        _position.Y = MathHelper.Lerp(_position.Y, _nextPosition.Y, _speed.Y);
-                        _direction.Y = 1;
-                    }
-                    else
-                    {
-                        _direction.Y = 0;
-                    }
 
                     foreach (DynamicBall obj in _parentSimulation.DynamicObjects)
                     {
@@ -265,20 +255,27 @@ namespace BouncingBall
                         {
                             if (boundingsphere.Intersects(obj.boundingsphere))
                             {
+                                _speed.Y = 0;
                                 _direction.Y = 0;
                             }
                         }
                     }
+
+                    if (!((_nextPosition.Y + Origin.Y + Size.Y) > ScreenManager.Instance.ScreenSize.Y))
+                    {
+                        _position.Y = _nextPosition.Y;
+                    }
+                    else
+                    {
+                        _direction.Y = 0;
+                    }
+
+                    _velocity.Y = (_parentSimulation.g * Mass) / 5;
+                    _speed.X = (Math.Min(_speed.X + Velocity.X, MaxSpeed.X)) * Direction.X;
+                    _speed.Y = (Math.Min(_speed.Y + (Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds), MaxSpeed.Y)) * Direction.Y;
+                    
                 }
             }
-
-            MainGameClass.objExplorer.Invoke((Action)(() =>
-            {
-                MainGameClass.objExplorer.NameTextBox.Text = _parentSimulation.SelectedObject != null ? _parentSimulation.SelectedObject.Name : string.Empty;
-                MainGameClass.objExplorer.XSpeedTextBox.Text = _parentSimulation.SelectedObject != null ? (_parentSimulation.SelectedObject as DynamicBall).Speed.X.ToString() : string.Empty;
-                MainGameClass.objExplorer.YSpeedTextBox.Text = _parentSimulation.SelectedObject != null ? (_parentSimulation.SelectedObject as DynamicBall).Speed.Y.ToString() : string.Empty;
-                MainGameClass.objExplorer.Update();
-            }));
 
             _prevMouseState = _currentMouseState;
         }
@@ -288,7 +285,7 @@ namespace BouncingBall
             throw new NotImplementedException();
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             //if (Visible)
             {

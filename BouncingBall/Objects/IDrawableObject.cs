@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BouncingBall
+namespace Engine.Objects
 {
     public interface IDrawableObject : IObject
     {
@@ -19,6 +19,6 @@ namespace BouncingBall
 
         float ZDepth { get; set; }
 
-        void Draw(GameTime gameTime, SpriteBatch spriteBatch);
+        void Draw(SpriteBatch spriteBatch, GameTime gameTime);
     }
 }

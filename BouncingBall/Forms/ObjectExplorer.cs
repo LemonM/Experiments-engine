@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace BouncingBall.Forms
+namespace Engine.Forms
 {
     public partial class ObjectExplorer : Form
     {

@@ -7,8 +7,9 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Engine.Objects;
 
-namespace BouncingBall
+namespace Engine.Simulations
 {
     public class Simulation
     {
@@ -88,12 +89,12 @@ namespace BouncingBall
             {
                 foreach (IDynamicObject dynamicObject in DynamicObjects)
                 {
-                    dynamicObject.Draw(gameTime, spriteBatch);
+                    dynamicObject.Draw(spriteBatch, gameTime);
                 }
 
-                foreach (IStaticObject staticObject in StaticObjects)
+                foreach (IDrawableObject staticObject in StaticObjects)
                 {
-                    staticObject.Draw(gameTime);
+                    staticObject.Draw(spriteBatch, gameTime);
                 }
             }
         }

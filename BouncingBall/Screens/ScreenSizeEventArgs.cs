@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace BouncingBall
+namespace Engine.Screens
 {
     class ScreenSizeEventArgs : EventArgs
     {

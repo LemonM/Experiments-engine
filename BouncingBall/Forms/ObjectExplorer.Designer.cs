@@ -1,4 +1,4 @@
-﻿namespace BouncingBall.Forms
+﻿namespace Engine.Forms
 {
     partial class ObjectExplorer
     {

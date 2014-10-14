@@ -9,9 +9,12 @@ using Microsoft.Xna.Framework.Input;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using Engine.Simulations;
+using Engine.Objects;
+using Engine.Screens;
 #endregion
 
-namespace BouncingBall
+namespace Engine
 {
     /// <summary>
     /// This is the main type for game
@@ -20,7 +23,6 @@ namespace BouncingBall
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static Forms.ObjectExplorer objExplorer = new Forms.ObjectExplorer();
 
         public MainGameClass()
             : base()
@@ -38,11 +40,7 @@ namespace BouncingBall
         /// </summary>
         protected override void Initialize()
         {
-            ScreenManager.Instance.Initialize(Content);
-            ScreenManager.Instance.SetScreenSize(640, 480);
-            ScreenManager.Instance.SetCurrentScreen(new SimulationScreen());
-            SimulationManager.Instance.SetCurrentSimulation(new Simulation("TestSimulation", 9.8f));
-            SimulationManager.Instance.GetCurrentSimulation().Initialize();
+            GameManager.Instance.Initialize(Content);
             base.Initialize();
         }
 
@@ -55,12 +53,7 @@ namespace BouncingBall
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(250, 100), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 3f), 3f, 0f, "1"));
-            SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(250, 250), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 12f), 10f, 0f, "1"));
-            SimulationManager.Instance.GetCurrentSimulation().LoadContent(ScreenManager.Instance.CurrentScreen.Content);
-            objExplorer.Show();
-            objExplorer.ResumeLayout();
-
+            GameManager.Instance.LoadContent();
         }
 
         /// <summary>
@@ -79,7 +72,7 @@ namespace BouncingBall
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            
+            GameManager.Instance.Update(gameTime, this);
 
             base.Update(gameTime);
         }
@@ -91,6 +84,9 @@ namespace BouncingBall
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+
+            GameManager.Instance.DebugDraw(spriteBatch, gameTime);
+            GameManager.Instance.Draw(spriteBatch, gameTime);
 
             base.Draw(gameTime);
         }

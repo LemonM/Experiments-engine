@@ -3,15 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Engine.Simulations;
 
-namespace BouncingBall
+namespace Engine.Objects
 {
     public interface IDynamicObject : IDrawableObject
     {
-        event EventHandler OnDrag;
-        event EventHandler OnLMBDown;
-        event EventHandler OnLMBRelease;
-
+   
         Simulation ParentSimulation { get; set; }
 
         Vector2 Velocity { get; set; }

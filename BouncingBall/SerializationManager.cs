@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace BouncingBall
+namespace Engine
 {
     class SerializationManager<T> where T : class 
     {

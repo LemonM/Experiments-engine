@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 #endregion
 
-namespace BouncingBall
+namespace Engine
 {
 #if WINDOWS || LINUX
     /// <summary>
