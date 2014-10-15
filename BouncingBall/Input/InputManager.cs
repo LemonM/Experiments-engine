@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,22 @@ namespace Engine.Input
     {
         private static InputManager _instance;
 
-        private static InputManager Instance
+        public static InputManager Instance
         {
             get { _instance = _instance ?? new InputManager(); return _instance; }
         }
 
         private KeyboardManager _kBoard = new KeyboardManager();
+        private MouseManager _mouse = new MouseManager();
 
         public KeyboardManager KBoard { get { return _kBoard; } }
+        public MouseManager MouseM { get { return _mouse; } }
+
+        public void Update(GameTime gameTime)
+        {
+            _kBoard.Update();
+            _mouse.Update();
+        }
 
         public class KeyboardManager
         {
@@ -54,6 +63,44 @@ namespace Engine.Input
             public bool IsKeyPressed(Keys key)
             {
                 return kBoardCurrentState.IsKeyDown(key);
+            }
+        }
+
+        public class MouseManager
+        {
+
+            public event EventHandler OnLMBDown;
+            public event EventHandler OnLMBClick;
+
+            private MouseState _prevState;
+            private MouseState _currState;
+
+            Point Position
+            {
+                get
+                {
+                    return Mouse.GetState().Position;
+                }
+                set
+                {
+                    Mouse.SetPosition(value.X, value.Y);
+                }
+            }
+
+            public void Update()
+            {
+                _currState = Mouse.GetState();
+
+                if (_currState.LeftButton == ButtonState.Pressed)
+                    if (OnLMBDown != null)
+                        OnLMBDown(this, new MouseEventArgs());
+
+                if (_prevState.LeftButton == ButtonState.Pressed && _currState.LeftButton == ButtonState.Released)
+                    if (OnLMBClick != null)
+                        OnLMBClick(this, new MouseEventArgs());
+
+                _prevState = _currState;
+
             }
         }
     }

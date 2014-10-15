@@ -270,7 +270,7 @@ namespace Engine.Objects
                         _direction.Y = 0;
                     }
 
-                    _velocity.Y = (_parentSimulation.g * Mass) / 5;
+                    _velocity.Y = ((_parentSimulation.g * Mass) * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     _speed.X = (Math.Min(_speed.X + Velocity.X, MaxSpeed.X)) * Direction.X;
                     _speed.Y = (Math.Min(_speed.Y + (Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds), MaxSpeed.Y)) * Direction.Y;
                     

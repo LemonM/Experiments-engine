@@ -1,4 +1,5 @@
-﻿using Engine.Objects;
+﻿using Engine.Input;
+using Engine.Objects;
 using Engine.Screens;
 using Engine.Simulations;
 using Microsoft.Xna.Framework;
@@ -59,6 +60,7 @@ namespace Engine
 
         public void Update(GameTime gameTime, MainGameClass game)
         {
+            InputManager.Instance.Update(gameTime);
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 game.Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
