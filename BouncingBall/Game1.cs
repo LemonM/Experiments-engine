@@ -30,6 +30,9 @@ namespace Engine
             graphics = new GraphicsDeviceManager(this);
             ScreenManager.Instance.GDM = graphics;
             Content.RootDirectory = "Content";
+            graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
+            
         }
 
         /// <summary>
@@ -54,6 +57,7 @@ namespace Engine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             GameManager.Instance.LoadContent();
+            
         }
 
         /// <summary>
