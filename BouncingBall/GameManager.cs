@@ -52,8 +52,8 @@ namespace Engine
         public void LoadContent()
         {
             Random random = new Random();
-            for (int i = 0; i < 10; i++)
-                SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(i * 75, 100), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 3f), (random.Next(8, 50)), 0f, "1"));
+            for (int i = 0; i < 3; i++)
+                SimulationManager.Instance.GetCurrentSimulation().AddDynamicObject(new DynamicBall(new Vector2(i * 150, 100), new Vector2(50, 50), new Vector2(1, 1), new Vector2(0.1f, 0f), new Vector2(8f, 8f), (random.Next(8, 50)), 0f, "1"));
 
             SimulationManager.Instance.GetCurrentSimulation().LoadContent(ScreenManager.Instance.CurrentScreen.Content);
 
