@@ -1,16 +1,6 @@
 ﻿#region Using Statements
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Keys = Microsoft.Xna.Framework.Input.Keys;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
-using Engine.Simulations;
-using Engine.Objects;
 using Engine.Screens;
 #endregion
 

@@ -242,6 +242,11 @@ namespace Engine.Objects
             {
                 if (Enabled)
                 {
+
+                    _velocity.Y = ((_parentSimulation.g) * Mass * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                    _speed.X = (Math.Min(_speed.X + Velocity.X, MaxSpeed.X)) * Direction.X;
+                    _speed.Y = (Math.Min(_speed.Y + (Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds), MaxSpeed.Y)) * Direction.Y;
+
                     _direction.Y = 1;
 
                     _nextPosition = _position + _speed;
@@ -261,19 +266,8 @@ namespace Engine.Objects
                         }
                     }
 
-                    if (!((_nextPosition.Y + Origin.Y + Size.Y) > ScreenManager.Instance.ScreenSize.Y))
-                    {
-                        _position.Y = _nextPosition.Y;
-                    }
-                    else
-                    {
-                        _direction.Y = 0;
-                    }
+                    _position.Y = _nextPosition.Y;
 
-                    _velocity.Y = ((_parentSimulation.g) * Mass * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                    _speed.X = (Math.Min(_speed.X + Velocity.X, MaxSpeed.X)) * Direction.X;
-                    _speed.Y = (Math.Min(_speed.Y + (Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds), MaxSpeed.Y)) * Direction.Y;
-                    
                 }
             }
 
@@ -315,8 +309,6 @@ namespace Engine.Objects
         {
             _parentSimulation.SelectedObject = this;           
         }
-
-        
 
     }
 }

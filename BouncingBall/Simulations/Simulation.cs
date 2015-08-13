@@ -126,8 +126,6 @@ namespace Engine.Simulations
         {
             StaticObjects.Add(staticObject);
         }
-
-        
         
     }
 }
